@@ -1,13 +1,18 @@
 package com.zx.controller;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
+import com.zx.feignApi.HelloRemote;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -23,6 +28,75 @@ public class AutoDeliverController {
 
     @Autowired
     private DiscoveryClient discoveryClient;
+
+
+    @Autowired
+    private HelloRemote helloRemote ;
+
+    /*@HystrixCommand(
+            // 线程池标识，要保持唯⼀，不唯⼀的话就共⽤了
+            threadPoolKey = "findResumeOpenStateTimeout",
+            // 线程池细节属性配置
+            threadPoolProperties = {
+                    @HystrixProperty(name = "coreSize", value =
+                            "1"), // 线程数
+                    @HystrixProperty(name = "maxQueueSize", value = "20") // 等待队列⻓度
+            },
+            commandProperties = {
+                    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "5000")
+            }
+    )*/
+    @RequestMapping("/hello/zx")
+    public String hello() {
+         return helloRemote.hello("zhangxin");
+        //return null;
+    }
+
+    @HystrixCommand(
+            // 线程池标识，要保持唯⼀，不唯⼀的话就共⽤了
+            threadPoolKey =
+                    "findResumeOpenStateTimeoutFallback",
+            // 线程池细节属性配置
+            threadPoolProperties = {
+                    @HystrixProperty(name = "coreSize", value =
+                            "2"), // 线程数
+                    @HystrixProperty(name = "maxQueueSize", value = "20") // 等待队列⻓度
+            },
+            commandProperties = {
+                    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "2000")
+            }, fallbackMethod = "myfallback"
+    )
+    @RequestMapping("/hello2/zx")
+    public String hello2() {
+        return helloRemote.hello("zhangxin2");
+    }
+
+    public String myfallback() {
+        return "-1";
+    }
+
+    @RequestMapping("/hello/test")
+    public void test(HttpServletRequest request, @RequestParam(name = "zx") String zx) {
+
+        String zm = request.getParameter("zm");
+
+        System.out.print(Integer.parseInt("222"));
+
+        //throw  new NullPointerException();
+        this.zhangxin("zx");
+
+    }
+
+    public void zhangxin(String str) {
+        if (str.equals("zx")) {
+            throw new RuntimeException("错误");
+
+            // throw  new NullPointerException();
+        }
+
+    }
+
+
 
     @RequestMapping("/checkState/{userId}")
     public Integer findResumeOpenState(@PathVariable Long userId) {
@@ -41,5 +115,8 @@ public class AutoDeliverController {
 
         return forObject;
     }
+
+
+
 
 }
