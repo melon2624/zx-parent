@@ -10,3 +10,31 @@ eureka:
   instance:
     prefer-ip-address: true
     instance-id: ${spring.cloud.client.ip-address}:${spring.application.name}:${server.port}:@project.version@
+
+
+zx-resume :
+  ribbon:
+    #请求连接超时时间
+    ConnectTimeout: 2000
+    #请求处理超时时间
+    ##########################################Feign超时时长设置
+    ReadTimeout: 2000
+  level:
+    com.zx.feignApi.HelloRemote
+
+logging:
+  level:
+    com.zx.feignApi.HelloRemote : debug
+
+feign:
+  hystrix:
+    enabled: true  #开启Feign的熔断功能
+
+hystrix:
+  command:
+    default:
+      execution:
+        isolation:
+            thread :
+              ##########################################Hystrix的超时时⻓设置
+              timeoutInMilliseconds: 2000
