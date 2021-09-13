@@ -28,7 +28,7 @@ public class ResumeController {
     public String  hello(@RequestParam String param){
 
         try {
-            Thread.sleep(3000);
+            Thread.sleep(5000);
             System.out.println("8081");
         }catch (Exception e){
             e.printStackTrace();

@@ -3,13 +3,11 @@ package com.zx.controller;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixProperty;
 import com.zx.feignApi.HelloRemote;
+import com.zx.service.ZxServie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.client.ServiceInstance;
 import org.springframework.cloud.client.discovery.DiscoveryClient;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import javax.servlet.http.HttpServletRequest;
@@ -96,8 +94,6 @@ public class AutoDeliverController {
 
     }
 
-
-
     @RequestMapping("/checkState/{userId}")
     public Integer findResumeOpenState(@PathVariable Long userId) {
         //TODO  从Eureka Server中获取我们关注的那个服务的实例信息以及接口信息
@@ -116,7 +112,16 @@ public class AutoDeliverController {
         return forObject;
     }
 
+    @Autowired
+    ZxServie zxServie;
 
+    @PostMapping("/thread")
+    public void  MultiThread(){
+
+        zxServie.zhangxin();
+
+        System.out.println("执行完了");
+    }
 
 
 }

@@ -18,7 +18,7 @@ zx-resume :
     ConnectTimeout: 2000
     #请求处理超时时间
     ##########################################Feign超时时长设置
-    ReadTimeout: 2000
+    ReadTimeout: 1000
   level:
     com.zx.feignApi.HelloRemote
 
@@ -37,4 +37,4 @@ hystrix:
         isolation:
             thread :
               ##########################################Hystrix的超时时⻓设置
-              timeoutInMilliseconds: 2000
+              timeoutInMilliseconds: 4000
