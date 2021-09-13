@@ -14,6 +14,7 @@
         <module>zx-resume-8080</module>
         <module>zx-resume-8081</module>
         <module>zx-autodeliver</module>
+        <module>configserver</module>
     </modules>
 
     <parent>
